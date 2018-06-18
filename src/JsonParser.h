@@ -24,12 +24,12 @@ public:
 	std::string filename;
 	std::string subject;
 	void addData(short value);
-	bool getData(short values[5]);
+	void getData(int values[5]);
 	void refreshFromData();
-	void refreshFromFile();
+	bool refreshFromFile();
 private:
 	const std::string prototype = "{\"subject\" : \"%s\", \"score\": [0, 0, 0, 0, 0]}";
-	short data[5] = {0, 0, 0, 0, 0};
+	int data[5] = {0, 0, 0, 0, 0};
 };
 
 }
