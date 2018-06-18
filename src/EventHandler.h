@@ -9,6 +9,10 @@
 #define EVENTHANDLER_H_
 #include <iostream>
 #include "SDL2/SDL.h"
+#include "Screen.h"
+#include <vector>
+#include "JsonParser.h"
+
 
 namespace feedback {
 
@@ -16,9 +20,15 @@ class EventHandler {
 public:
 	EventHandler();
 	virtual ~EventHandler();
-	void init(std::string filename, std::string subject);
+	void menu();
+	void getSubject();
+	void init();
 private:
+	bool quit = false;
+	std::vector<std::string> subjects;
+	std::vector<JsonParser> parsers;
 	SDL_Event event;
+	Screen screen;
 };
 
 } /* namespace feedback */

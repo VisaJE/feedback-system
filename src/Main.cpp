@@ -21,15 +21,10 @@ int main() {
 		cout << "FAIL" << endl;
 		return 1;
 	}
+	EventHandler events;
 
-	JsonParser testParser("tes.json", "testi", false);
-	testParser.addData(4);
-	int values[5];
-	testParser.getData(values);
-	for (int i = 0; i < 5; i++) {
-		cout << i+1 << ": " << values[i] << endl;
-	}
 
+	events.menu();
 	SDL_Quit();
 	return 0;
 }
