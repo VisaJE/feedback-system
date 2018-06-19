@@ -22,9 +22,14 @@ public:
 	virtual ~EventHandler();
 	void menu();
 	void getSubject();
+	void getFont();
 	void init();
 private:
 	bool quit = false;
+	bool pressed[5] = {false, false, false, false, false};
+	void press(int y, int x);
+	void unpress(int y, int x);
+	void unpressAll();
 	std::vector<std::string> subjects;
 	std::vector<JsonParser> parsers;
 	SDL_Event event;

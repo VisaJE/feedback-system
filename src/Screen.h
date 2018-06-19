@@ -32,10 +32,13 @@ public:
 	void printSubjects();
 	void selectSubject(int i);
 	unsigned int getSelection();
-
+	int mainFontSize =0;
+	const int MENU_FONT = 20;
 	void menu(std::string subject);
+	int getButton(int y, int x);
 private:
 	const int BACKGROUND_COLOR[3] = {90, 90, 150};
+	void printBackground();
 	unsigned int selection = 0;
 	void selectNext();
 	std::vector<std::string> subjects;
@@ -46,7 +49,7 @@ private:
 	void refreshFromBuffer();
 	typedef int32_t s32;
 
-	const int y = 290;
+	const int butY = 290;
 	const int rad = 70;
 	const int spacing = (SCREEN_WIDTH - 10*rad)/6;
 	int col[5][3] ={ {243, 68, 68}, {255, 147, 38}, {245, 230, 58}, {198, 244, 50},{112, 246, 76}};

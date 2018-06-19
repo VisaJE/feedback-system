@@ -7,6 +7,7 @@
 
 #include "Screen.h"
 #include <iostream>
+#include <sstream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <vector>
@@ -44,11 +45,7 @@ Screen::Screen(int fontSize): fontSize(fontSize) {
 	}
 	buffer = vector<Uint32>(SCREEN_WIDTH*SCREEN_HEIGHT, 0);
 	// To make the background prettier.
-	for (int y =0; y < SCREEN_HEIGHT; y++) {
-		for (int x =0; x < SCREEN_WIDTH; x++) {
-			setPixel(y, x, BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2]);
-		}
-	}
+	printBackground();
 	refreshFromBuffer();
 
 }
@@ -58,6 +55,13 @@ Screen::~Screen() {
 	destroy();
 	TTF_CloseFont(font);
 	TTF_Quit();
+}
+void Screen::printBackground() {
+	for (int y =0; y < SCREEN_HEIGHT; y++) {
+			for (int x =0; x < SCREEN_WIDTH; x++) {
+				setPixel(y, x, BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2]);
+			}
+	}
 }
 
 void Screen::changeFont(int s) {
@@ -148,7 +152,7 @@ void Screen::printButtons() {
 
 
 	for (int i = 0; i < 5; i++) {
-		printButton(y, rad, spacing, i);
+		printButton(butY, rad, spacing, i);
 	}
 	refreshFromBuffer();
 }
@@ -170,12 +174,12 @@ void Screen::pressButton(const int y, const int rad, const int spacing, int i) {
 }
 
 void Screen::pressButton(int i) {
-	pressButton(y, rad, spacing, i);
+	pressButton(butY, rad, spacing, i);
 	printSubjects();
 }
 
 void Screen::unpressButton(int i) {
-	printButton(y, rad, spacing, i);
+	printButton(butY, rad, spacing, i);
 	selectNext();
 }
 void Screen::addSubject(std::string subject) {
@@ -246,8 +250,17 @@ unsigned int Screen::getSelection() {
 }
 
 void Screen::menu(string subject) {
+	printBackground();
+	stringstream text;
+	text << "Current subjects: ";
+	for (unsigned int i = 0; i < subjects.size(); i++) {
+		text << subjects[i] << "  ";
+	}
+	text << "\nCurrent font: " << mainFontSize << "\n\nBindings: a->add subject, r->remove subjects, f->change font\n             Enter->start gathering, ESC->back.\n\n";
+	text << subject;
+	string t = text.str();
 	SDL_Rect rect;
-	SDL_Surface* textSurf = TTF_RenderText_Blended_Wrapped(font, subject.c_str(), TEXT_COLOR, (unsigned int)SCREEN_WIDTH);
+	SDL_Surface* textSurf = TTF_RenderText_Blended_Wrapped(font, t.c_str(), TEXT_COLOR, (unsigned int)SCREEN_WIDTH);
 	SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, textSurf);
 	int texW, texH = 0;
 	SDL_QueryTexture(message, NULL, NULL, &texW, &texH);
@@ -261,6 +274,27 @@ void Screen::menu(string subject) {
 	SDL_RenderPresent(renderer);
 	SDL_DestroyTexture(message);
 	SDL_FreeSurface(textSurf);
+}
+
+/*
+ * Buttons are indexed: 0-4 are the score buttons. Anything over that points to a subject in their order in the subjects vector. -1 is returned for no button.
+ */
+int Screen::getButton(int y, int x) {
+	if (y<0 || x<0 || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT) return -1;
+	if (y > butY-rad && y < butY+rad) {
+		if (x > spacing && x < spacing + 2*rad) return 0;
+		if (x > 2*(spacing + rad) && x < 2*spacing + 4*rad) return 1;
+		if (x > 3*spacing + 4*rad && x < 3*spacing + 6*rad) return 2;
+		if (x > 4*spacing + 6*rad && x < 4*spacing + 8*rad) return 3;
+		if (x > 5*spacing + 8*rad && x < 5*spacing + 10*rad) return 3;
+	}
+	if (y > SUBJECT_Y_OFFSET && y < SUBJECT_Y_OFFSET+SUBJECT_HEIGHT) {
+		double xOff = x*1.0/(boxWidth()+SUBJECT_SPACING);
+		if (xOff > subjects.size() || x < SUBJECT_SPACING) return -1;
+		if ((int)(xOff - SUBJECT_SPACING/(SUBJECT_SPACING + boxWidth())) == (int)xOff) return 5+ (int)xOff;
+
+	}
+	return -1;
 }
 
 
