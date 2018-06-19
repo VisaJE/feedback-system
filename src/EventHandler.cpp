@@ -152,7 +152,7 @@ void EventHandler::getFont() {
 	                    /* Add new text onto the end of our text */
 	                	if (isdigit(event.text.text[0])) {
 							t.append(event.text.text);
-							++len;
+							len = t.length();
 							string temp = text;
 							screen.menu(temp.append(t));
 	                	}
@@ -162,7 +162,7 @@ void EventHandler::getFont() {
 	                	switch (event.key.keysym.sym) {
 	                	case SDLK_BACKSPACE:
 	                		if (len > 0) {
-	                			--len;
+	                			len = t.length();
 	                			t.pop_back();
 	                			string temp = text;
 	                			screen.menu(temp.append(t));
@@ -256,7 +256,6 @@ void EventHandler::init() {
 						case SDLK_5: {
 							parsers[screen.getSelection()].addData(5);
 							screen.unpressButton(4);
-
 							break;
 						}
 						}

@@ -101,9 +101,9 @@ void Screen::setPixel(int y, int x, int r, int g, int b) {
 }
 
 void Screen::refreshFromBuffer() {
+	SDL_RenderClear(renderer);
 	SDL_UpdateTexture(texture, NULL, &buffer[0], SCREEN_WIDTH*sizeof(Uint32));
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
-	SDL_RenderPresent(renderer);
 }
 
 void Screen::colorSetP(int x, int y, int r, int g, int b, int rad) {
@@ -149,8 +149,6 @@ void Screen::drawCircle(s32 _x, s32 _y, s32 radius, int r, int g, int b)
 
 
 void Screen::printButtons() {
-
-
 	for (int i = 0; i < 5; i++) {
 		printButton(butY, rad, spacing, i);
 	}
@@ -214,13 +212,12 @@ void Screen::printSubjects() {
 	printBoxes();
 	refreshFromBuffer();
 	printTexts();
+	SDL_RenderPresent(renderer);
 }
 
 void Screen::selectSubject(int i) {
 	selection = i;
-	printBoxes();
-	refreshFromBuffer();
-	printTexts();
+	printSubjects();
 }
 void Screen::selectNext() {
 	selection = (selection+1)%subjects.size();
@@ -240,7 +237,6 @@ void Screen::printTexts() {
 		rect.y = SUBJECT_Y_OFFSET + (SUBJECT_HEIGHT-texH)/2;
 		rect.x = SUBJECT_SPACING+ i*(SUBJECT_SPACING+boxWidth())+(boxWidth() - rect.w)/2;
 		SDL_RenderCopy(renderer, message, NULL, &rect);
-		SDL_RenderPresent(renderer);
 		SDL_DestroyTexture(message);
 		SDL_FreeSurface(textSurf);
 	}
