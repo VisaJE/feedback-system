@@ -51,11 +51,9 @@ void EventHandler::menu() {
 								parsers.pop_back();
 							}
 							screen.removeSubjects();
-						}
-						case SDLK_a: {
-							getSubject();
 							break;
 						}
+
 						case SDLK_f: {
 							getFont();
 							break;
@@ -66,7 +64,14 @@ void EventHandler::menu() {
 						}
 						break;
 					}
+					case SDL_KEYUP:
+						switch (event.key.keysym.sym) {
+						case SDLK_a:
+							getSubject();
+							break;
 
+						}
+						break;
 				}
 			}
 	}
@@ -233,8 +238,10 @@ void EventHandler::init() {
 					}
 					case SDL_KEYDOWN: {
 						switch (event.key.keysym.sym) {
-						case SDLK_q: {
+						case SDLK_ESCAPE: {
 							done = true;
+							screen.changeFont(screen.MENU_FONT);
+							screen.menu("");
 							break;
 						}
 						case SDLK_5: {
@@ -255,6 +262,12 @@ void EventHandler::init() {
 						}
 						break;
 					}
+					case SDL_FINGERDOWN :
+						press(event.tfinger.y*screen.SCREEN_HEIGHT, event.tfinger.x*screen.SCREEN_WIDTH);
+						break;
+					case  SDL_FINGERUP :
+						unpress(event.tfinger.y*screen.SCREEN_HEIGHT, event.tfinger.x*screen.SCREEN_WIDTH);
+						break;
 				}
 			}
 	}
