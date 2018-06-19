@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include <cctype>
+#include <sstream>
 #include "Screen.h"
 #include <chrono>
 //#include <time.h>
