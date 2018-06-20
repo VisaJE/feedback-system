@@ -193,7 +193,6 @@ void EventHandler::getFont() {
 
 void EventHandler::press(int y, int x) {
 	int ind = screen.getButton(y, x);
-	cout << ind << endl;
 	if (ind != -1) {
 		if (ind < 5) {
 			if (!pressed[ind]) {
@@ -208,14 +207,12 @@ void EventHandler::press(int y, int x) {
 
 void EventHandler::unpress(int y, int x) {
 	int ind = screen.getButton(y, x);
-	cout << ind << endl;
 	if (ind != -1) {
 		if (ind < 5) {
 			if (pressed[ind]) {
 				parsers[screen.getSelection()].addData(5);
 				screen.unpressButton(ind);
 				pressed[ind] = false;
-				cout << "Is pressed?" << pressed[ind] << endl;
 			} else unpressAll();
 		}
 	}
@@ -228,7 +225,7 @@ void EventHandler::unpressAll() {
 }
 
 void EventHandler::init() {
-	//SDL_ShowCursor(SDL_DISABLE);
+	SDL_ShowCursor(SDL_DISABLE);
 	quit = false;
 	bool done = false;
 	screen.changeFont(screen.mainFontSize);
@@ -267,10 +264,10 @@ void EventHandler::init() {
 						break;
 					}
 					case SDL_FINGERDOWN :
-						press(event.tfinger.y*screen.SCREEN_HEIGHT, event.tfinger.x*screen.SCREEN_WIDTH);
+						press(event.tfinger.y, event.tfinger.x);
 						break;
 					case  SDL_FINGERUP :
-						unpress(event.tfinger.y*screen.SCREEN_HEIGHT, event.tfinger.x*screen.SCREEN_WIDTH);
+						unpress(event.tfinger.y, event.tfinger.x);
 						break;
 					case SDL_MOUSEBUTTONDOWN :
 						press(event.button.y, event.button.x);
