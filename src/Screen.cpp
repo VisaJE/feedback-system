@@ -34,7 +34,7 @@ Screen::Screen(int fontSize): fontSize(fontSize) {
 		throw 10;
 	}
 	// Only to be used in the final screen with correct dimensions.
-	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+	//SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -171,6 +171,7 @@ void Screen::pressButton(const int y, const int rad, const int spacing, int i) {
 	}
 }
 
+// Starts form 0
 void Screen::pressButton(int i) {
 	pressButton(butY, rad, spacing, i);
 	printSubjects();
@@ -282,7 +283,7 @@ int Screen::getButton(int y, int x) {
 		if (x > 2*(spacing + rad) && x < 2*spacing + 4*rad) return 1;
 		if (x > 3*spacing + 4*rad && x < 3*spacing + 6*rad) return 2;
 		if (x > 4*spacing + 6*rad && x < 4*spacing + 8*rad) return 3;
-		if (x > 5*spacing + 8*rad && x < 5*spacing + 10*rad) return 3;
+		if (x > 5*spacing + 8*rad && x < 5*spacing + 10*rad) return 4;
 	}
 	if (y > SUBJECT_Y_OFFSET && y < SUBJECT_Y_OFFSET+SUBJECT_HEIGHT) {
 		double xOff = x*1.0/(boxWidth()+SUBJECT_SPACING);
