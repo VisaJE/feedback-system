@@ -229,7 +229,8 @@ void Screen::printTexts() {
 
 	for (unsigned int i = 0; i < subjects.size(); i++) {
 		SDL_Rect rect;
-		SDL_Surface* textSurf = TTF_RenderText_Blended_Wrapped(font, subjects[i].c_str(), TEXT_COLOR, (unsigned int)SCREEN_WIDTH);
+		//SDL_Surface* textSurf = TTF_RenderText_Blended_Wrapped(font, subjects[i].c_str(), TEXT_COLOR, (unsigned int)SCREEN_WIDTH);
+		SDL_Surface* textSurf = TTF_RenderUTF8_Blended(font, subjects[i].c_str(), TEXT_COLOR);
 		SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, textSurf);
 		int texW, texH = 0;
 		SDL_QueryTexture(message, NULL, NULL, &texW, &texH);
@@ -253,11 +254,12 @@ void Screen::menu(string subject) {
 	for (unsigned int i = 0; i < subjects.size(); i++) {
 		text << subjects[i] << "  ";
 	}
-	text << "\nCurrent font: " << mainFontSize << "\n\nBindings: a->add subject, r->remove subjects, f->change font\n             Enter->start gathering, ESC->back.\n\n";
+	text << "\nNote that this menu does not show special letters properly.\nCurrent font: " << mainFontSize << "\n\nBindings: a->add subject, r->remove subjects, f->change font, q->quit\n             Enter->start gathering, ESC->back.\n\n";
 	text << subject;
 	string t = text.str();
 	SDL_Rect rect;
 	SDL_Surface* textSurf = TTF_RenderText_Blended_Wrapped(font, t.c_str(), TEXT_COLOR, (unsigned int)SCREEN_WIDTH);
+	//SDL_Surface* textSurf =  TTF_RenderUTF8_Blended(font, t.c_str(), TEXT_COLOR);
 	SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, textSurf);
 	int texW, texH = 0;
 	SDL_QueryTexture(message, NULL, NULL, &texW, &texH);
