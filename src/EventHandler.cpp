@@ -210,7 +210,7 @@ void EventHandler::unpress(int y, int x) {
 	if (ind != -1) {
 		if (ind < 5) {
 			if (pressed[ind]) {
-				parsers[screen.getSelection()].addData(5);
+				parsers[screen.getSelection()].addData(ind+1);
 				screen.unpressButton(ind);
 				pressed[ind] = false;
 			} else unpressAll();
