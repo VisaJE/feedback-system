@@ -34,7 +34,7 @@ Screen::Screen(int fontSize): fontSize(fontSize) {
 		throw 10;
 	}
 	// Only to be used in the final screen with correct dimensions.
-	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+	//SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -186,6 +186,7 @@ void Screen::addSubject(std::string subject) {
 }
 void Screen::removeSubjects() {
 	subjects = vector<string>();
+	menu("");
 }
 int Screen::boxWidth() {
 	return (SCREEN_WIDTH-(subjects.size()+1)*SUBJECT_SPACING)/subjects.size();;
@@ -230,7 +231,7 @@ void Screen::printTexts() {
 	for (unsigned int i = 0; i < subjects.size(); i++) {
 		SDL_Rect rect;
 		//SDL_Surface* textSurf = TTF_RenderText_Blended_Wrapped(font, subjects[i].c_str(), TEXT_COLOR, (unsigned int)SCREEN_WIDTH);
-		SDL_Surface* textSurf = TTF_RenderUTF8_Blended(font, subjects[i].c_str(), TEXT_COLOR);
+		SDL_Surface* textSurf = TTF_RenderUTF8_Blended_Wrapped(font, subjects[i].c_str(), TEXT_COLOR, (unsigned int)boxWidth());
 		SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, textSurf);
 		int texW, texH = 0;
 		SDL_QueryTexture(message, NULL, NULL, &texW, &texH);
@@ -258,7 +259,7 @@ void Screen::menu(string subject) {
 	text << subject;
 	string t = text.str();
 	SDL_Rect rect;
-	SDL_Surface* textSurf = TTF_RenderText_Blended_Wrapped(font, t.c_str(), TEXT_COLOR, (unsigned int)SCREEN_WIDTH);
+	SDL_Surface* textSurf = TTF_RenderUTF8_Blended_Wrapped(font, t.c_str(), TEXT_COLOR, (unsigned int)SCREEN_WIDTH);
 	//SDL_Surface* textSurf =  TTF_RenderUTF8_Blended(font, t.c_str(), TEXT_COLOR);
 	SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, textSurf);
 	int texW, texH = 0;
