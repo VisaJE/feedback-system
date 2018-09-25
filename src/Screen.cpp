@@ -34,7 +34,7 @@ Screen::Screen(int fontSize): fontSize(fontSize) {
 		throw 10;
 	}
 	// Only to be used in the final screen with correct dimensions.
-	//SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -255,7 +255,7 @@ void Screen::menu(string subject) {
 	for (unsigned int i = 0; i < subjects.size(); i++) {
 		text << subjects[i] << "  ";
 	}
-	text << "\nNote that this menu does not show special letters properly.\nCurrent font: " << mainFontSize << "\n\nBindings: a->add subject, r->remove subjects, f->change font, q->quit\n             Enter->start gathering, ESC->back.\n\n";
+	text << "\nCurrent font: " << mainFontSize << "\n\nBindings: a->add subject, r->remove subjects, f->change font, q->quit\n             Enter->start gathering, ESC->back.\n\n";
 	text << subject;
 	string t = text.str();
 	SDL_Rect rect;
