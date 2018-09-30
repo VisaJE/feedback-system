@@ -49,7 +49,7 @@ private:
 	void refreshFromBuffer();
 	typedef int32_t s32;
 
-	const int butY = 290;
+	const int butY = 320;
 	const int rad = 70;
 	const int spacing = (SCREEN_WIDTH - 10*rad)/6;
 	int col[5][3] ={ {243, 68, 68}, {255, 147, 38}, {245, 230, 58}, {198, 244, 50},{112, 246, 76}};
@@ -65,7 +65,7 @@ private:
 
 	const int SUBJECT_SPACING = 20;
 	const int SUBJECT_Y_OFFSET = 40;
-	const int SUBJECT_HEIGHT = 100;
+	const int SUBJECT_HEIGHT = 150;
 	int fontSize = 50;
 	const int BOX_COLOR[3] = {60, 60, 80};
 	const int SELECTION_COLOR[3] = {70, 180, 80};

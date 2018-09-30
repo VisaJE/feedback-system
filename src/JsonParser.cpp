@@ -85,8 +85,16 @@ void JsonParser::refreshFromData() {
 	jsonDoc.Accept(writer);
 
 	ofstream out(filename.c_str());
-	out << buffer.GetString();
-	out.close();
+	if (!out.good()) {
+		ofstream out2(filename.append( "_updateError").c_str() );
+		out2 << buffer.GetString();
+		out2.close();
+	}
+	else {
+		out << buffer.GetString();
+		out.close();
+	}
+
 }
 
 bool JsonParser::refreshFromFile() {
