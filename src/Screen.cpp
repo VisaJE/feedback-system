@@ -20,6 +20,7 @@ namespace feedback {
 Screen::Screen(int fontSize): fontSize(fontSize) {
 	TTF_Init();
 	font = TTF_OpenFont("arial.ttf", fontSize);
+	miniFont = TTF_OpenFont("arial.ttf", miniFontSize);
 	if (font == NULL) {
 		cout << "Font not found" << endl;
 		throw 20;
@@ -54,6 +55,7 @@ Screen::Screen(): Screen(20) {
 Screen::~Screen() {
 	destroy();
 	TTF_CloseFont(font);
+	TTF_CloseFont(miniFont);
 	TTF_Quit();
 }
 void Screen::printBackground() {
@@ -67,7 +69,9 @@ void Screen::printBackground() {
 void Screen::changeFont(int s) {
 	TTF_CloseFont(font);
 	fontSize = s;
+	miniFontSize = s*MINI_SCALE;
 	font = TTF_OpenFont("arial.ttf", fontSize);
+	miniFont = TTF_OpenFont("arial.ttf", miniFontSize);
 	if (font == NULL) {
 		cout << "Font not found" << endl;
 		throw 20;
@@ -189,25 +193,41 @@ void Screen::removeSubjects() {
 	menu("");
 }
 int Screen::boxWidth() {
-	return (SCREEN_WIDTH-(subjects.size()+1)*SUBJECT_SPACING)/subjects.size();;
+	return (SCREEN_WIDTH-(subjects.size()+1)*SUBJECT_SPACING)/(1+(subjects.size()-1)*MINI_SCALE);
 }
-
+void Screen::clearBoxes() {
+	for (int y = SUBJECT_Y_OFFSET; y < SUBJECT_Y_OFFSET + SUBJECT_HEIGHT; y++) {
+		for (int x = 0; x < SCREEN_WIDTH; x++) {
+			setPixel(y, x, BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2]);
+		}
+	}
+}
 void Screen::printBoxes() {
-	for (unsigned int i = 0; i < subjects.size(); i++) {
-		if (i != selection) {
-			for (int y = SUBJECT_Y_OFFSET; y < SUBJECT_HEIGHT+SUBJECT_Y_OFFSET; y++)  {
-				for (unsigned int x = SUBJECT_SPACING + i*(SUBJECT_SPACING + boxWidth()); x < (i+1)*(SUBJECT_SPACING + boxWidth()); x++) {
+	clearBoxes();
+	int beforeSelection = selection;
+	int afterSelection = subjects.size()-1-beforeSelection;
+	int bW = boxWidth();
+	int miniSize = bW*MINI_SCALE;
+	for (int i = 0; i < beforeSelection; i++) {
+			for (int y = MINI_Y_OFFSET; y < MINI_HEIGHT+MINI_Y_OFFSET; y++)  {
+				for (int x = SUBJECT_SPACING + i*(SUBJECT_SPACING + miniSize); x < (i+1)*(SUBJECT_SPACING + miniSize); x++) {
 					setPixel(y, x, BOX_COLOR[0],BOX_COLOR[1],BOX_COLOR[2]);
 				}
 			}
-		}
 	}
 	for (int y = SUBJECT_Y_OFFSET; y < SUBJECT_HEIGHT+SUBJECT_Y_OFFSET; y++)  {
-		for (unsigned int x = SUBJECT_SPACING + selection*(SUBJECT_SPACING + boxWidth()); x < (selection+1)*(SUBJECT_SPACING + boxWidth()); x++) {
+		for (int x = SUBJECT_SPACING + beforeSelection*(SUBJECT_SPACING + miniSize); x < beforeSelection*(SUBJECT_SPACING + miniSize) + SUBJECT_SPACING + bW; x++) {
 			setPixel(y, x, SELECTION_COLOR[0],SELECTION_COLOR[1],SELECTION_COLOR[2]);
 		}
 	}
-
+	int leftPadding = beforeSelection*(SUBJECT_SPACING + miniSize) + SUBJECT_SPACING*2+bW;
+	for (int i = 0; i < afterSelection; i++) {
+		for (int y = MINI_Y_OFFSET; y < MINI_HEIGHT+MINI_Y_OFFSET; y++)  {
+			for (int x = leftPadding + i*(SUBJECT_SPACING + miniSize); x < leftPadding + i*SUBJECT_SPACING + (i+1)*miniSize; x++) {
+				setPixel(y, x, BOX_COLOR[0],BOX_COLOR[1],BOX_COLOR[2]);
+			}
+		}
+	}
 
 }
 void Screen::printSubjects() {
@@ -226,24 +246,64 @@ void Screen::selectNext() {
 	printSubjects();
 }
 
-void Screen::printTexts() {
+void Screen::printMiniText(int index) {
+	int bW = boxWidth();
+	int miniSize = bW*MINI_SCALE;
+	int miniPad = TEXT_PADDING*MINI_SCALE;
+	SDL_Rect rect;
+	SDL_Surface* textSurf = TTF_RenderUTF8_Blended_Wrapped(miniFont, subjects[index].c_str(), TEXT_COLOR, (unsigned int)miniSize-2*miniPad);
+	SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, textSurf);
+	int texW, texH = 0;
+	SDL_QueryTexture(message, NULL, NULL, &texW, &texH);
+	rect.w = texW;
+	rect.h = texH;
+	if (texH >= MINI_HEIGHT) {
+		rect.y = MINI_Y_OFFSET + miniPad;
+	} else rect.y = MINI_Y_OFFSET + (MINI_HEIGHT - texH)/2;
+	if (index > (int)selection) {
+		int leftPadding = selection*(SUBJECT_SPACING + miniSize) + SUBJECT_SPACING*2+bW;
+		rect.x = leftPadding + (index-selection-1)*(SUBJECT_SPACING + miniSize) + (miniSize-texW)/2;
 
-	for (unsigned int i = 0; i < subjects.size(); i++) {
-		SDL_Rect rect;
-		//SDL_Surface* textSurf = TTF_RenderText_Blended_Wrapped(font, subjects[i].c_str(), TEXT_COLOR, (unsigned int)SCREEN_WIDTH);
-		SDL_Surface* textSurf = TTF_RenderUTF8_Blended_Wrapped(font, subjects[i].c_str(), TEXT_COLOR, (unsigned int)boxWidth());
-		SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, textSurf);
-		int texW, texH = 0;
-		SDL_QueryTexture(message, NULL, NULL, &texW, &texH);
-		rect.w = texW;
-		rect.h = texH;
-		rect.y = SUBJECT_Y_OFFSET + (SUBJECT_HEIGHT-texH)/2;
-		rect.x = SUBJECT_SPACING+ i*(SUBJECT_SPACING+boxWidth())+(boxWidth() - rect.w)/2;
-		SDL_RenderCopy(renderer, message, NULL, &rect);
-		SDL_DestroyTexture(message);
-		SDL_FreeSurface(textSurf);
+	} else {
+		rect.x = SUBJECT_SPACING + (index)*(SUBJECT_SPACING + miniSize) + (miniSize-texW)/2;
+	}
+	SDL_RenderCopy(renderer, message, NULL, &rect);
+	SDL_DestroyTexture(message);
+	SDL_FreeSurface(textSurf);
+}
+void Screen::printSubjectText() {
+	int bW = boxWidth();
+	int miniSize = bW * MINI_SCALE;
+	SDL_Rect rect;
+	//SDL_Surface* textSurf = TTF_RenderText_Blended_Wrapped(font, subjects[i].c_str(), TEXT_COLOR, (unsigned int)SCREEN_WIDTH);
+	SDL_Surface* textSurf = TTF_RenderUTF8_Blended_Wrapped(font, subjects[selection].c_str(), TEXT_COLOR, (unsigned int)bW-2*TEXT_PADDING);
+	SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, textSurf);
+	int texW, texH = 0;
+	SDL_QueryTexture(message, NULL, NULL, &texW, &texH);
+	rect.w = texW;
+	rect.h = texH;
+	if (texH >= SUBJECT_HEIGHT) {
+		rect.y = SUBJECT_Y_OFFSET + TEXT_PADDING;
+	} else rect.y = SUBJECT_Y_OFFSET + (SUBJECT_HEIGHT - texH)/2;
+	rect.x = SUBJECT_SPACING+ selection*(SUBJECT_SPACING+miniSize)+(bW - rect.w)/2;
+	SDL_RenderCopy(renderer, message, NULL, &rect);
+	SDL_DestroyTexture(message);
+	SDL_FreeSurface(textSurf);
+}
+void Screen::printTexts() {
+	int beforeSelection = selection;
+	int afterSelection = subjects.size()-1-beforeSelection;
+	printSubjectText();
+
+	for (int i = 0; i < beforeSelection; i++) {
+		printMiniText(i);
+	}
+	for (int i = 0; i < afterSelection; i++) {
+		printMiniText(i+selection+1);
 	}
 }
+
+
 unsigned int Screen::getSelection() {
 	return selection;
 }
@@ -288,10 +348,22 @@ int Screen::getButton(int y, int x) {
 		if (x > 4*spacing + 6*rad && x < 4*spacing + 8*rad) return 3;
 		if (x > 5*spacing + 8*rad && x < 5*spacing + 10*rad) return 4;
 	}
+	int miniSize = boxWidth()*MINI_SCALE;
 	if (y > SUBJECT_Y_OFFSET && y < SUBJECT_Y_OFFSET+SUBJECT_HEIGHT) {
-		double xOff = x*1.0/(boxWidth()+SUBJECT_SPACING);
-		if (xOff > subjects.size() || x < SUBJECT_SPACING) return -1;
-		if ((int)(xOff - SUBJECT_SPACING/(SUBJECT_SPACING + boxWidth())) == (int)xOff) return 5+ (int)xOff;
+		int leftBorder = SUBJECT_SPACING;
+		unsigned int added = 0;
+		while (leftBorder < x) {
+			if (x-leftBorder > SUBJECT_SPACING) {
+				if (added != selection) {
+					leftBorder += miniSize;
+				} else leftBorder += boxWidth();
+			if (leftBorder >= x) return added+5;
+			else {
+				added += 1;
+				leftBorder += SUBJECT_SPACING;
+			}
+			} else return -1;
+		}
 
 	}
 	return -1;

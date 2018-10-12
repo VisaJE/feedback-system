@@ -43,6 +43,7 @@ private:
 	void selectNext();
 	std::vector<std::string> subjects;
 	TTF_Font* font;
+	TTF_Font* miniFont;
 	bool isDestroyed = false;
 	void destroy();
 	void setPixel(int y, int x, int r, int g, int b);
@@ -66,12 +67,20 @@ private:
 	const int SUBJECT_SPACING = 20;
 	const int SUBJECT_Y_OFFSET = 40;
 	const int SUBJECT_HEIGHT = 150;
+	const int TEXT_PADDING = 10;
+	const double MINI_SCALE = 1.0/2.2; // Unselected subjects get a smaller box and font.
+	const int MINI_HEIGHT = SUBJECT_HEIGHT*MINI_SCALE;
+	const int MINI_Y_OFFSET = SUBJECT_Y_OFFSET + (1-MINI_SCALE)*SUBJECT_HEIGHT;
 	int fontSize = 50;
+	int miniFontSize = fontSize*MINI_SCALE;
 	const int BOX_COLOR[3] = {60, 60, 80};
 	const int SELECTION_COLOR[3] = {70, 180, 80};
 	SDL_Color TEXT_COLOR = {230, 230, 220};
 	int boxWidth();
+	void clearBoxes();
 	void printBoxes();
+	void printMiniText(int index);
+	void printSubjectText();
 	void printTexts();
 };
 

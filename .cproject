@@ -23,7 +23,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1727202387" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.base.898849879" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.base">
 								<option id="gnu.cpp.compiler.option.include.paths.826434541" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/visakoe1/ohjelmointi/rapidjson/include"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Users\Eemil\Documents\Ohjelmointi\rapidjson\include&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.optimization.level.1215576070" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
