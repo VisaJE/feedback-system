@@ -3,3 +3,7 @@
 /.settings/
 /*.json
 /Release/
+/.vimrc
+/gateway1
+/gateway2
+/feedback
