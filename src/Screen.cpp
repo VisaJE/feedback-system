@@ -34,8 +34,11 @@ Screen::Screen(int fontSize): fontSize(fontSize) {
 		destroy();
 		throw 10;
 	}
-	// Only to be used in the final screen with correct dimensions.
-	//SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+
+    #ifndef DEBUG
+        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);   
+    #endif
+
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);

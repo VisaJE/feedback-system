@@ -1,4 +1,6 @@
 /Debug/
+obj
+Feedback
 /*.dll
 /.settings/
 /*.json

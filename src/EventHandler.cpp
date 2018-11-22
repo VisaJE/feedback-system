@@ -17,6 +17,7 @@
 #include <iomanip>
 #include "JsonParser.h"
 
+
 using namespace std;
 namespace feedback {
 
@@ -225,7 +226,9 @@ void EventHandler::unpressAll() {
 }
 
 void EventHandler::init() {
-	SDL_ShowCursor(SDL_DISABLE);
+    #ifndef DEBUG 
+        SDL_ShowCursor(SDL_DISABLE);
+    #endif
 	quit = false;
 	bool done = false;
 	screen.changeFont(screen.mainFontSize);
