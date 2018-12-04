@@ -113,7 +113,7 @@ void Screen::refreshFromBuffer() {
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 }
 
-void Screen::colorSetP(int x, int y, int r, int g, int b, int rad) {
+void Screen::colorSetP(int x, int y, int r, int g, int b) {
 	setPixel(y, x, r, g, b);
 }
 
@@ -130,14 +130,14 @@ void Screen::drawCircle(s32 _x, s32 _y, s32 radius, int r, int g, int b)
    while (x >= y)
    {
       //  Each of the following renders an octant of the circle
-      colorSetP(_x + x, _y - y, r, g, b, radius);
-      colorSetP(_x + x, _y + y, r, g, b, radius);
-      colorSetP(_x - x, _y - y, r, g, b, radius);
-      colorSetP(_x - x, _y + y, r, g, b, radius);
-      colorSetP(_x + y, _y - x, r, g, b, radius);
-      colorSetP(_x + y, _y + x, r, g, b, radius);
-      colorSetP(_x - y, _y - x, r, g, b, radius);
-      colorSetP(_x - y, _y + x, r, g, b, radius);
+      colorSetP(_x + x, _y - y, r, g, b);
+      colorSetP(_x + x, _y + y, r, g, b);
+      colorSetP(_x - x, _y - y, r, g, b);
+      colorSetP(_x - x, _y + y, r, g, b);
+      colorSetP(_x + y, _y - x, r, g, b);
+      colorSetP(_x + y, _y + x, r, g, b);
+      colorSetP(_x - y, _y - x, r, g, b);
+      colorSetP(_x - y, _y + x, r, g, b);
 
       if (err <= 0)
       {

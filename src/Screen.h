@@ -55,7 +55,7 @@ private:
 	const int spacing = (SCREEN_WIDTH - 10*rad)/6;
 	int col[5][3] ={ {243, 68, 68}, {255, 147, 38}, {245, 230, 58}, {198, 244, 50},{112, 246, 76}};
 
-	void colorSetP(int x, int y, int r, int g, int b, int rad);
+	void colorSetP(int x, int y, int r, int g, int b);
 	void printButton(const int y, const int rad, const int spacing, int i);
 	void pressButton(const int y, const int rad, const int spacing, int i);
 	void drawCircle(s32 _x, s32 _y, s32 radius, int r, int g, int b);
