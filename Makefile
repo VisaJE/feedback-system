@@ -6,9 +6,9 @@
 EXE = Feedback
 
 #Put Rapidjson include folder here
-CXXFLAGS = -I/home/visakoe1/ohjelmointi/rapidjson/include -Wall -O2 -DDEBUG
+CXXFLAGS = -I/home/visakoe1/ohjelmointi/rapidjson/include -fopenmp -Wall -O2 -DDEBUG
 
-LDFLAGS=-g
+LDFLAGS=-g -fopenmp
 LDLIBS= -lSDL2main -lSDL2 -lSDL2_ttf
 
 SRC_DIR = src

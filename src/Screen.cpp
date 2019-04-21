@@ -62,6 +62,7 @@ Screen::~Screen() {
 	TTF_Quit();
 }
 void Screen::printBackground() {
+#pragma omp parallel for
 	for (int y =0; y < SCREEN_HEIGHT; y++) {
 			for (int x =0; x < SCREEN_WIDTH; x++) {
 				setPixel(y, x, BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2]);
@@ -156,6 +157,7 @@ void Screen::drawCircle(s32 _x, s32 _y, s32 radius, int r, int g, int b)
 
 
 void Screen::printButtons() {
+#pragma omp parallel for
 	for (int i = 0; i < 5; i++) {
 		printButton(butY, rad, spacing, i);
 	}
@@ -211,6 +213,7 @@ void Screen::printBoxes() {
 	int afterSelection = subjects.size()-1-beforeSelection;
 	int bW = boxWidth();
 	int miniSize = bW*MINI_SCALE;
+#pragma omp parallel for
 	for (int i = 0; i < beforeSelection; i++) {
 			for (int y = MINI_Y_OFFSET; y < MINI_HEIGHT+MINI_Y_OFFSET; y++)  {
 				for (int x = SUBJECT_SPACING + i*(SUBJECT_SPACING + miniSize); x < (i+1)*(SUBJECT_SPACING + miniSize); x++) {
@@ -224,6 +227,7 @@ void Screen::printBoxes() {
 		}
 	}
 	int leftPadding = beforeSelection*(SUBJECT_SPACING + miniSize) + SUBJECT_SPACING*2+bW;
+#pragma omp parallel for
 	for (int i = 0; i < afterSelection; i++) {
 		for (int y = MINI_Y_OFFSET; y < MINI_HEIGHT+MINI_Y_OFFSET; y++)  {
 			for (int x = leftPadding + i*(SUBJECT_SPACING + miniSize); x < leftPadding + i*SUBJECT_SPACING + (i+1)*miniSize; x++) {
